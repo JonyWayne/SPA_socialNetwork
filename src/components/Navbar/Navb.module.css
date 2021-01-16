@@ -1,0 +1,33 @@
+.nav {
+    grid-area: n;
+    background-color: rgb(204,255,204);
+    padding: 30px;
+   
+  }
+  .nav a {
+    display: inline-block;
+    color:#3f3d25;
+    line-height: 1;
+    text-decoration:none;
+    cursor: pointer;
+    font-family: "Goudy Bookletter 1911", sans-serif;
+    line-height: 2.5;
+  }
+  a:after {
+    background-color: plum ;
+    display: block;
+    content: "";
+    height: 2px;
+    width: 0%;
+    -webkit-transition: width .3s ease-in-out;
+    -moz--transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    
+  }
+  a:hover:after,
+  a:focus:after {
+    width: 100%;
+  }
+ a.activeLink {
+    color: mediumseagreen;
+  }

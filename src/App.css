@@ -1,0 +1,37 @@
+ul li {list-style-type: armenian;}
+
+
+.app-wrapper {
+  
+   margin: 0 auto;
+  display: grid;
+  width: 1200px;
+grid-template-areas:
+"h h"
+"n c  ";
+grid-template-rows:100px 1fr;
+grid-template-columns: 2fr 10fr;
+grid-gap:150px;
+
+
+}
+.header {
+   grid-area: h;
+   background-color: aqua;
+   background-image: url(..//../my-app/src/Curious.png);
+   height: 200px;
+   background-color: rgb(204,255,204);
+}
+.logo {
+  height: 150px;
+}
+
+.app-wrapper-content {
+  
+    grid-area: c;
+    background-color: gray;
+    
+}
+
+
+
