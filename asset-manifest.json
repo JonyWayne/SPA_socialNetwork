@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/SPA_socialNetwork/static/css/main.0acc472e.chunk.css",
+    "main.js": "/SPA_socialNetwork/static/js/main.62a4d5cb.chunk.js",
+    "main.js.map": "/SPA_socialNetwork/static/js/main.62a4d5cb.chunk.js.map",
+    "runtime-main.js": "/SPA_socialNetwork/static/js/runtime-main.f825a5d1.js",
+    "runtime-main.js.map": "/SPA_socialNetwork/static/js/runtime-main.f825a5d1.js.map",
+    "static/js/2.19c625a9.chunk.js": "/SPA_socialNetwork/static/js/2.19c625a9.chunk.js",
+    "static/js/2.19c625a9.chunk.js.map": "/SPA_socialNetwork/static/js/2.19c625a9.chunk.js.map",
+    "static/css/3.b92ac76e.chunk.css": "/SPA_socialNetwork/static/css/3.b92ac76e.chunk.css",
+    "static/js/3.2fa4d81b.chunk.js": "/SPA_socialNetwork/static/js/3.2fa4d81b.chunk.js",
+    "static/js/3.2fa4d81b.chunk.js.map": "/SPA_socialNetwork/static/js/3.2fa4d81b.chunk.js.map",
+    "static/css/4.100f454e.chunk.css": "/SPA_socialNetwork/static/css/4.100f454e.chunk.css",
+    "static/js/4.051d3b4f.chunk.js": "/SPA_socialNetwork/static/js/4.051d3b4f.chunk.js",
+    "static/js/4.051d3b4f.chunk.js.map": "/SPA_socialNetwork/static/js/4.051d3b4f.chunk.js.map",
+    "index.html": "/SPA_socialNetwork/index.html",
+    "static/css/3.b92ac76e.chunk.css.map": "/SPA_socialNetwork/static/css/3.b92ac76e.chunk.css.map",
+    "static/css/4.100f454e.chunk.css.map": "/SPA_socialNetwork/static/css/4.100f454e.chunk.css.map",
+    "static/css/main.0acc472e.chunk.css.map": "/SPA_socialNetwork/static/css/main.0acc472e.chunk.css.map",
+    "static/js/2.19c625a9.chunk.js.LICENSE.txt": "/SPA_socialNetwork/static/js/2.19c625a9.chunk.js.LICENSE.txt",
+    "static/media/Ajux_loader.6281c6f4.gif": "/SPA_socialNetwork/static/media/Ajux_loader.6281c6f4.gif",
+    "static/media/App.css": "/SPA_socialNetwork/static/media/Curious.c5a17fce.png",
+    "static/media/GORA.c094f5b0.png": "/SPA_socialNetwork/static/media/GORA.c094f5b0.png",
+    "static/media/Pirojkov.734f9ee1.png": "/SPA_socialNetwork/static/media/Pirojkov.734f9ee1.png",
+    "static/media/User.c62711b8.png": "/SPA_socialNetwork/static/media/User.c62711b8.png",
+    "static/media/bat.9459e308.png": "/SPA_socialNetwork/static/media/bat.9459e308.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f825a5d1.js",
+    "static/js/2.19c625a9.chunk.js",
+    "static/css/main.0acc472e.chunk.css",
+    "static/js/main.62a4d5cb.chunk.js"
+  ]
+}
