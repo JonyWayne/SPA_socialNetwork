@@ -28,10 +28,10 @@ class App extends Component {
         this.props.initializeApp();
     }
   render() {
-    // Если не проиницилизировались, верни нам прелоадер -загрузки экран
-    if (!this.props.initialized) { 
-    return <Preloader/>
-    }
+    // // Если не проиницилизировались, верни нам прелоадер -загрузки экран
+    // if (!this.props.initialized) { 
+    // return <Preloader/>
+    // }
      return (
              <div className= 'app-wrapper'>
         <HeaderContainer />
