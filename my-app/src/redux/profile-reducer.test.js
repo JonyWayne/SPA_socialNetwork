@@ -4,7 +4,7 @@ import App from "../App";
 import React from "react";
 
 it ('lengt of posts should be incremented', ()=> {
-
+   
    //1.test data. Проверяем происходит ли добавление поста. Тест
    let action=addPostActionCreator('it-kamasutra, new Post added');
    let state = {

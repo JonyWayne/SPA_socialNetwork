@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
-import { Route, BrowserRouter, withRouter } from 'react-router-dom';
+import { Route, BrowserRouter, withRouter, Switch, Redirect } from 'react-router-dom';
 import Music from './components/Music/Music';
 import Video from './components/Video/Video';
 import Security from './components/Security/Security';
@@ -24,9 +24,16 @@ const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsCo
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer')); // Импорт компоненты с помощью lazy компонент
 
 class App extends Component {
+  catchAllUnhandleError=(promiseRejectionEvent)=>{
+  //  alert('Some error occured');
+  }
   componentDidMount () {
         this.props.initializeApp();
-    }
+        window.addEventListener("unhandledrejection",this.catchAllUnhandleError);// Функция глобальная для отлова ошибок rejection в промисах
+        }
+    componentWillUnmount () {
+      window.addEventListener("unhandledrejection",this.catchAllUnhandleError);// Демонтируем функцию обращения к глобальному объекту,подчищаем за собой мусор,когда компонента умрет, должен умереть и мусор
+    }    
   render() {
     // // Если не проиницилизировались, верни нам прелоадер -загрузки экран
     // if (!this.props.initialized) { 
@@ -38,6 +45,9 @@ class App extends Component {
         <Navbar />
         
         <div className='app-wrapper-content'>
+          <Switch>
+          <Route exact path='/'render={()=><Redirect to={"/profile"}/>}/>
+                     
           <Route path='/dialogs' 
           render={withSuspence(DialogsContainer)}/>
           
@@ -56,6 +66,8 @@ class App extends Component {
           <Route path='/settings' component={Settings}/>
           <Route path='/security' component={Security}/>
           <Route path='/about_us' component={About_us}/>
+          <Route path='*' render={()=><div>404 Not Found Page,Sorry;)</div>}/>
+          </Switch>
         </div>
                       
         </div>  

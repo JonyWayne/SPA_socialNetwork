@@ -41,9 +41,23 @@ getStatus(userID){
 },
 updateStatus(status){
   return instance.put(`profile/status/`,{status:status}); //Отправляем на сервер объект, объект имеет значение параметр статус
-
 },
+savePhoto(photoFile) {
+  const formData=new FormData();  //Для передачи изображения на сервер нужно добавить форм дату
+  formData.append('image',photoFile); //передаем в формд дату заголовок image взяли с сервера и передаем файл фото
 
+  return instance.put(`profile/photo/`,formData, {//Пут запрос на сервер (см.документацию в АПИ ендпоинты и тд)
+  headers: {
+    'Content-type':'multipart/form-data'
+  }
+  });  
+},                                           //Отправляем фото на сервер, контент тайп тип будет не json а форм дата
+                                              //Обязательно также передаем заголовок Headers 'Content-type':'multipart/form-data'
+                                             
+                                             
+  saveProfile(profile) {
+    return instance.put(`profile`,profile); //Отправляем на сервер пут запрос на замену данных
+  }                                           
 }
 
 
@@ -53,11 +67,17 @@ export const authAPI= { //Компонента для DAL уровня, ауте
 me() {  //Метод, дай мне меня
    return instance.get(`auth/me`)
  }, 
- login(email, password, rememberMe=false) {
-return instance.post(`auth/login`, {email, password, rememberMe});
+ login(email, password, rememberMe=false,captcha=null) {
+return instance.post(`auth/login`, {email, password, rememberMe,captcha});
  }, 
  logout() {
   return instance.delete(`auth/login`);
    },          
 }
-
+// 1) Каптча.Формируем запрос (DAL уровень)
+export const securityAPI= { //Компонента для DAL уровня, каптча
+  getCaptchaUrl() {  //Метод, дай мне каптчу
+     return instance.get(`/security/get-captcha-url`)
+       
+  }
+}
