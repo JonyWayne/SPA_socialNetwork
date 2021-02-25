@@ -8,7 +8,7 @@ import thunkMiddleware from "redux-thunk";   //Мы подключаем сан�
 import {reducer as formReducer} from 'redux-form';
 import appReducer from './app-reducer';
 
-let reducers= combineReducers ({
+let rootReducer= combineReducers ({
 profilePage:profileReducer,
 dialogsPage:dialogsReducer,
 sidebar:slidebarReducer,
@@ -19,11 +19,15 @@ form:formReducer
 });
 // Добавляем строки для работы с расширением стор от хром
 
+type RootReducerType= typeof rootReducer //(globalstate:GLOBALSTATE)=>GLOBALSTATE
+export type AppStateType=ReturnType<RootReducerType> //ReturnType-функция возвращает типы данных,которые приходят со всех редьюсеров и формируют глобальный стэйт
+let state:AppStateType
+//@ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunkMiddleware))); // Создание нового стора с расширением для хрома
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware))); // Создание нового стора с расширением для хрома
 
 // let store=createStore(reducers, applyMiddleware(thunkMiddleware.withExtraArgument('string'))); создание старого стора без расширения для хрома
-
-window.__store__=store;
+//@ts-ignore
+window.__store__=store;  //Игнорируем строку typescript
 
 export default store;

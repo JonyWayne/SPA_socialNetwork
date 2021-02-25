@@ -46,8 +46,8 @@ class App extends Component {
         
         <div className='app-wrapper-content'>
           <Switch>
-          <Route exact path='/'render={()=><Redirect to={"/profile"}/>}/>
-                     
+          <Route exact path='/' render={()=><Redirect to={"/profile"}/>}/>
+          <Route exact path='/SPA_socialNetwork' render={()=><Redirect to={"/profile"}/>}/>        
           <Route path='/dialogs' 
           render={withSuspence(DialogsContainer)}/>
           
@@ -59,7 +59,7 @@ class App extends Component {
           }}/>     
           {/* :UserId-Добавляем путь к пользователю в ссылку. ?-означает,что параметр может отсутствовать */}
           <Route path='/login'render={()=><Login  />}/>    
-          <Route path='/users'render={()=><UsersContainer />}/>
+          <Route path='/users'render={()=><UsersContainer pageTitle={'Страница пользователей'}/>}/>
           <Route path='/music' component={Music}/>
           <Route path='/video' component={Video}/>
           <Route path='/news' component={News}/>

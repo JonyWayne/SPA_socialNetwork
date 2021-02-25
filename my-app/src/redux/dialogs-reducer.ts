@@ -1,7 +1,14 @@
 
 // const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
-
+type DialogType= {
+    id:number
+    name:string
+}
+type MessageType= {
+    id:number
+    message:string
+}
 let initialState = {
     dialogs: [
         { id: 1, name: 'Димасик' },
@@ -9,7 +16,7 @@ let initialState = {
         { id: 3, name: 'Искандер' },
         { id: 4, name: 'Дон Дьябло' },
         { id: 5, name: 'Андрей' }
-    ],
+    ] as Array <DialogType>, //Воспринимай как массив Диалогов
     messages: [
         { id: 1, message: 'Привет!)' },
         { id: 2, message: 'Как твои дела?' },
@@ -17,11 +24,12 @@ let initialState = {
         { id: 4, message: 'Yo!Yo!YO!' },
         { id: 5, message: 'HEYYYY MAN' },
         { id: 6, message: 'Do you know? Enrique)' }
-    ],
+    ]as Array <MessageType>, //Воспринимай как массив Сообщений
     // newMessageBody: " "
 };
+export type InitialStateType= typeof initialState
 
-const dialogsReducer = (state = initialState, action) => {
+const dialogsReducer = (state = initialState, action:any):InitialStateType => {
     switch (action.type) {
         // case UPDATE_NEW_MESSAGE_BODY:
         //     return {
@@ -48,6 +56,10 @@ const dialogsReducer = (state = initialState, action) => {
     }
 }
 
-export const sendMessageCreator = (newMessageBody) => ({ type: SEND_MESSAGE, newMessageBody })                //  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
+export type SendMessageCreatorActionType= {
+ type:typeof SEND_MESSAGE
+ newMessageBody:string
+}
+export const sendMessageCreator = (newMessageBody:string) => ({ type: SEND_MESSAGE, newMessageBody })                //  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
 // export const updateNewMessageBodyCreator = (body) => ({ type: UPDATE_NEW_MESSAGE_BODY, body: body }) // Обновление стэйта с каждым нажатием кнопки. С использованием форм редакса стало не нужно
 export default dialogsReducer;

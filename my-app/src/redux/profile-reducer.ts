@@ -1,5 +1,6 @@
 import { stopSubmit } from "redux-form";
 import { profileAPI, usersAPI } from "../api/api";
+import { PhotosType, PostType, ProfileType } from "../Types/types";
 
 const ADD_POST = 'ADD_POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
@@ -8,20 +9,23 @@ const SET_STATUS = 'SET_STATUS';
 const DELETE_POST = 'DELETE_POST';
 const SAVE_PHOTO_SUCCESS='SAVE_PHOTO_SUCCESS'; // 6. Создаем ЭКШЕН 
 
+
 let initialState = {
     posts: [
         { id: 1, post: 'Hello, I try to be better', likesCount: 12 },
         { id: 2, post: 'Hello, its my second post', likesCount: 69 },
         { id: 3, post: 'ZZzzzZZZZ', likesCount: 241 },
         { id: 4, post: 'Yo!Yo!YO!', likesCount: 245 },
-        { id: 5, post: 'HEYYYY MAN', likesCount: 364 }],
+        { id: 5, post: 'HEYYYY MAN', likesCount: 364 }] as Array<PostType>,
     // newPostText: ' ', //Упразднено, редакс формы
-    profile: null,
-    status: ' '
+    profile: null as ProfileType | null,
+    status: ' ',
+    newPostText:''
 };
 
+export type InitialStateType=typeof initialState
 
-export const profileReducer = (state = initialState, action) => {
+export const profileReducer = (state = initialState, action:any):InitialStateType=> {
     switch (action.type) {
         case ADD_POST: {
             let newPost = {
@@ -70,7 +74,7 @@ export const profileReducer = (state = initialState, action) => {
         case SAVE_PHOTO_SUCCESS: {   //7. Тип экшена обрабатываем в редьюсере/ 8.Идем в АПИшку и добавляем запрос на сервер
             return {
                 ...state,
-                profile:{...state.profile, photos:action.photos}
+                profile:{...state.profile, photos:action.photos} as ProfileType
                 }
         };
 
@@ -80,30 +84,49 @@ export const profileReducer = (state = initialState, action) => {
     }
 }
 
-
-export const addPostActionCreator = (newPostText) => ({ type: ADD_POST, newPostText })
+type AddPostActionCreatorType={
+    type: typeof ADD_POST
+    newPostText:string
+}
+export const addPostActionCreator = (newPostText:string):AddPostActionCreatorType => ({ type: ADD_POST, newPostText })
 // export const updateNewPostTextActionCreator = (text) => ({ type: UPDATE_NEW_POST_TEXT, newText: text })
-export const setUserProfile = (profile) => ({ type: SET_USER_PROFILE, profile })
-export const setStatus = (status) => ({ type: SET_STATUS, status })
-export const deletePost = (postID) => ({ type: DELETE_POST, postID })
-export const savePhotoSuccess = (photos) => ({ type: SAVE_PHOTO_SUCCESS, photos }) // 5. Создаем ЭКШЕН КРИЭЙТОР (savePhotoSuccess),обновляем массив photos
+type SetUserProfileActionType={
+    type: typeof SET_USER_PROFILE
+    profile:ProfileType
+}
+export const setUserProfile = (profile:ProfileType):SetUserProfileActionType => ({ type: SET_USER_PROFILE, profile })
+type SetStatusActionType={
+    type: typeof SET_STATUS
+    status:string
+}
+export const setStatus = (status:string): SetStatusActionType=> ({ type: SET_STATUS, status })
+type DeletePostActionType={
+    type: typeof DELETE_POST
+    postID:number
+}
+export const deletePost = (postID:number):DeletePostActionType => ({ type: DELETE_POST, postID })
+type SavePhotoSuccessActionType={
+    type: typeof SAVE_PHOTO_SUCCESS
+    photos:PhotosType
+}
+export const savePhotoSuccess = (photos:PhotosType) => ({ type: SAVE_PHOTO_SUCCESS, photos }) // 5. Создаем ЭКШЕН КРИЭЙТОР (savePhotoSuccess),обновляем массив photos
 
 
-export const getUserProfile = (userID) => async (dispatch) => {  //Thunk creator -создаем санку
+export const getUserProfile = (userID:number) => async (dispatch:any) => {  //Thunk creator -создаем санку
     const response = await usersAPI.getProfile(userID)
     //    .then(response => {
     dispatch(setUserProfile(response.data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
 
 }
 
-export const getStatus = (userID) => async (dispatch) => {  //Thunk creator -создаем санку
+export const getStatus = (userID:number) => async (dispatch:any) => {  //Thunk creator -создаем санку
     let response = await profileAPI.getStatus(userID);
     // .then(response => {
     dispatch(setStatus(response.data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
     // });
 }
 
-export const updateStatus = (status) => async (dispatch) => {  //Thunk creator -создаем санку
+export const updateStatus = (status:string) => async (dispatch:any) => {  //Thunk creator -создаем санку
     try {
     let response = await profileAPI.updateStatus(status)
     // .then(response => {
@@ -117,7 +140,7 @@ catch (error) {              //Конструкцию асинхронного �
 }
 }
 
-export const savePhoto = (file) => async (dispatch) => {  //4 Thunk creator -создаем санку для передачи фото
+export const savePhoto = (file:any) => async (dispatch:any) => {  //4 Thunk creator -создаем санку для передачи фото
     let response = await profileAPI.savePhoto(file)
     // .then(response => {
     if (response.data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
@@ -128,7 +151,7 @@ export const savePhoto = (file) => async (dispatch) => {  //4 Thunk creator -с�
 }
 
 // saveProfile-3)ДОБАВЛЯЕМ САНКУ, ДИСПАТЧИ ДЛЯ РЕДЬЮСЕРА/4) В API добавляем запрос
-export const saveProfile = (profile) => async (dispatch,getState) => {
+export const saveProfile = (profile:ProfileType) => async (dispatch:any,getState:any) => {
     const userId=getState().auth.userId //Вытаскиваем пользовательский ID из другого редьюсера, обращением к СТОРУ
     const response = await profileAPI.saveProfile(profile)
     // .then(response => {
