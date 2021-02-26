@@ -1,5 +1,7 @@
 import { stopSubmit } from "redux-form";
-import { profileAPI, usersAPI } from "../api/api";
+import { profileAPI } from "../api/profile-api";
+import { usersAPI } from "../api/users-api";
+
 import { PhotosType, PostType, ProfileType } from "../Types/types";
 
 const ADD_POST = 'ADD_POST';
@@ -113,24 +115,24 @@ export const savePhotoSuccess = (photos:PhotosType) => ({ type: SAVE_PHOTO_SUCCE
 
 
 export const getUserProfile = (userID:number) => async (dispatch:any) => {  //Thunk creator -создаем санку
-    const response = await usersAPI.getProfile(userID)
+    const data = await usersAPI.getProfile(userID)
     //    .then(response => {
-    dispatch(setUserProfile(response.data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
+    dispatch(setUserProfile(data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
 
 }
 
 export const getStatus = (userID:number) => async (dispatch:any) => {  //Thunk creator -создаем санку
-    let response = await profileAPI.getStatus(userID);
+    let data = await profileAPI.getStatus(userID);
     // .then(response => {
-    dispatch(setStatus(response.data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
+    dispatch(setStatus(data)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
     // });
 }
 
 export const updateStatus = (status:string) => async (dispatch:any) => {  //Thunk creator -создаем санку
     try {
-    let response = await profileAPI.updateStatus(status)
+    let data = await profileAPI.updateStatus(status)
     // .then(response => {
-    if (response.data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
+    if (data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
         dispatch(setStatus(status)); //ДИСПАТЧАНЬЕ ЭКШЕНОВ ПРИВОДИТ К ИЗМЕНЕНИЮ СТЭЙТА В РЕДЬЮСЕРЕ
     }
     // });
@@ -141,10 +143,10 @@ catch (error) {              //Конструкцию асинхронного �
 }
 
 export const savePhoto = (file:any) => async (dispatch:any) => {  //4 Thunk creator -создаем санку для передачи фото
-    let response = await profileAPI.savePhoto(file)
+    let data = await profileAPI.savePhoto(file)
     // .then(response => {
-    if (response.data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
-        dispatch(savePhotoSuccess(response.data.data.photos)); //Если ответ с сервера положительный, фото сохранено на сервере мы диспатчим экшен и меняем фото в UI в браузере
+    if (data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
+        dispatch(savePhotoSuccess(data.data.photos)); //Если ответ с сервера положительный, фото сохранено на сервере мы диспатчим экшен и меняем фото в UI в браузере
     }                                    // 5. Создаем ЭКШЕН КРИЭЙТОР (savePhotoSuccess)
     //response.data.photos-на сервере лежат фото по такому адресу
     // });
@@ -153,16 +155,16 @@ export const savePhoto = (file:any) => async (dispatch:any) => {  //4 Thunk crea
 // saveProfile-3)ДОБАВЛЯЕМ САНКУ, ДИСПАТЧИ ДЛЯ РЕДЬЮСЕРА/4) В API добавляем запрос
 export const saveProfile = (profile:ProfileType) => async (dispatch:any,getState:any) => {
     const userId=getState().auth.userId //Вытаскиваем пользовательский ID из другого редьюсера, обращением к СТОРУ
-    const response = await profileAPI.saveProfile(profile)
+    const data = await profileAPI.saveProfile(profile)
     // .then(response => {
         // debugger;
-    if (response.data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
+    if (data.resultCode === 0) { //Если в ответе на запрос пришел резалтКод=0, то ошибки нет,статус сменился, сетаем статус
         dispatch(getUserProfile(userId)); //Если ответ с сервера положительный, заново диспатчим санку обнови пользователя и передаем айдишник залогин.пользователя
     }  
     else {
-        dispatch(stopSubmit("edit-profile", { _error: response.data.messages[0]}));
+        dispatch(stopSubmit("edit-profile", { _error: data.messages[0]}));
         // Если ошибка есть в запросе на сервер, ловим ошибку и стоп субмитим из формы
-        return Promise.reject(response.data.messages[0]);
+        return Promise.reject(data.messages[0]);
         // В промис возвращаем ошибку,если у нас она появилась в результате запроса на сервер
     }                                
 }

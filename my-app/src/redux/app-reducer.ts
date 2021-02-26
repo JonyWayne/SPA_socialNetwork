@@ -1,18 +1,13 @@
 import { type } from "os";
 import { stopSubmit } from "redux-form";
-import { authAPI } from "../api/api";
 import { getAuthUserData } from "./auth-reducer";
 
 const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
 
-export type InitialStateType ={
-    initialized: boolean;
-}
-
-
-let initialState:InitialStateType= {
+let initialState= {
     initialized: false
 };
+export type InitialStateType =typeof initialState
 
 
 const appReducer = (state:InitialStateType=initialState, action:any): InitialStateType=> {

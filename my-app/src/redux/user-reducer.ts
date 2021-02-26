@@ -1,10 +1,10 @@
-import { AppStateType } from './redux-store';
+import { AppStateType, InferActionsTypes } from './redux-store';
 import { UserType } from './../Types/types';
-import { usersAPI } from "../api/api";
 import { updateObjectInArray } from "../components/utilites/object-helpers";
 import { PhotosType } from "../Types/types";
 import { Dispatch } from 'react';
 import { ThunkAction } from 'redux-thunk';
+import { usersAPI } from '../api/users-api';
 
 const FOLLOW = 'FOLLOW';
 const UNFOLLOW = 'UNFOLLOW';
@@ -14,21 +14,21 @@ const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
 const TOOGLE_IS_FETCHING = 'TOOGLE_IS_FETCHING';
 const TOOGLE_IS_FOLLOWING_PROGRESS = 'TOOGLE_IS_FOLLOWING_PROGRESS';
 
-type ActionsType = any
+type ActionsType = InferActionsTypes<typeof actions>
 export const actions ={
-    followSuccess: (userId: number) => ({ type: FOLLOW, userId }),       // 1) Создаем компоненту JSX 2)Добавляем в APP.js ее (USERS) 3) Создаем REDUCERS для USERS 4) Добавляем ActionCreators-слушателей на кнопки и т.д
+    followSuccess: (userId: number) => ({ type: FOLLOW, userId }as const),       // 1) Создаем компоненту JSX 2)Добавляем в APP.js ее (USERS) 3) Создаем REDUCERS для USERS 4) Добавляем ActionCreators-слушателей на кнопки и т.д
 
-    unfollowSuccess: (userId: number) => ({ type: UNFOLLOW, userId }),   // 5) Создаем копию STATE,чтоб не копировать целиком объект (это не правильно, имьютабельность нарушится)
+    unfollowSuccess: (userId: number) => ({ type: UNFOLLOW, userId }as const),   // 5) Создаем копию STATE,чтоб не копировать целиком объект (это не правильно, имьютабельность нарушится)
     
-    setUsers: (users: Array<UserType>) => ({ type: SET_USERS, users }),        // 7) Берем юзеров списком из сервака, установим их в State
+    setUsers: (users: Array<UserType>) => ({ type: SET_USERS, users }as const),        // 7) Берем юзеров списком из сервака, установим их в State
     
-    setCurrentPage: (page: number) => ({ type: SET_CURRENT_PAGE, currentPage: page }),
+    setCurrentPage: (page: number) => ({ type: SET_CURRENT_PAGE, currentPage: page }as const),
     
-    setTotalUsersCount: (totalUsersCount: number) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount }),
+    setTotalUsersCount: (totalUsersCount: number) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount }as const),
     
-    toggleIsFetching: (isFetching: boolean) => ({ type: TOOGLE_IS_FETCHING, isFetching }),
+    toggleIsFetching: (isFetching: boolean) => ({ type: TOOGLE_IS_FETCHING, isFetching }as const),
     
-    toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: TOOGLE_IS_FOLLOWING_PROGRESS, isFetching, userId })
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: TOOGLE_IS_FOLLOWING_PROGRESS, isFetching, userId }as const)
 }
 
 let initialState = {
@@ -145,11 +145,11 @@ export const requestUsers = (page: number,
     }
 
 }
-const _followUnfollowFlow = async (dispatch: DispatchType, userId: number, apiMethod: any, actionCreator: (userId:number)=>FollowSuccessActionType | UfollowSuccessActionType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
+const _followUnfollowFlow = async (dispatch: DispatchType, userId: number, apiMethod: any, actionCreator: (userId:number)=>ActionsType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
     dispatch(actions.toggleFollowingProgress(true, userId));
-    let response = await apiMethod(userId);
-    if (response.data.resultCode === 0) {
-        dispatch(actions.actionCreator(userId));
+    let data = await apiMethod(userId);
+    if (data.resultCode === 0) {
+        dispatch(actionCreator(userId));
     }
     dispatch(actions.toggleFollowingProgress(false, userId));
 }
