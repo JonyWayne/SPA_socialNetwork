@@ -1,10 +1,10 @@
-import {applyMiddleware, combineReducers,compose,createStore} from 'redux';
+import {Action, applyMiddleware, combineReducers,compose,createStore} from 'redux';
 import profileReducer from './profile-reducer';
 import dialogsReducer from './dialogs-reducer';
 import slidebarReducer from './sidebar-reducer';
 import usersReducer from './user-reducer';
 import authReducer from './auth-reducer';
-import thunkMiddleware from "redux-thunk";   //Мы подключаем санковый мидлвээр, базовый, который установился по дефолту
+import thunkMiddleware, { ThunkAction } from "redux-thunk";   //Мы подключаем санковый мидлвээр, базовый, который установился по дефолту
 import {reducer as formReducer} from 'redux-form';
 import appReducer from './app-reducer';
 
@@ -25,8 +25,14 @@ let state:AppStateType
 //@ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware))); // Создание нового стора с расширением для хрома
-type PropertiesTypes<T> = T extends {[key:string]:infer U} ? U :never
-export type InferActionsTypes<T extends {[key:string]: (...args:any[])=>any}>=ReturnType<PropertiesTypes<T>>
+
+// type PropertiesTypes<T> = T extends {[key:string]:infer U} ? U :never
+// export type InferActionsTypes<T extends {[key:string]: (...args:any[])=>any}>=ReturnType<PropertiesTypes<T>>
+
+export type InferActionsTypes<T> = T extends {[keys:string]: (...args:any[])=>infer U} ? U:never //Две верхние строки заменили одной приводим экшен типы к типизации, верни нам функцию и определи ее тип сам
+
+export type BaseThunkType<A extends Action, R=Promise<void>> = ThunkAction<R, AppStateType, unknown, A>//общий тип для санок
+
 
 // let store=createStore(reducers, applyMiddleware(thunkMiddleware.withExtraArgument('string'))); создание старого стора без расширения для хрома
 //@ts-ignore

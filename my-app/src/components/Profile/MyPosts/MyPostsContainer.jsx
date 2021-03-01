@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addPostActionCreator, updateNewPostTextActionCreator } from '../../../redux/profile-reducer';
+import { actions,addPostActionCreator, updateNewPostTextActionCreator } from '../../../redux/profile-reducer';
 
 import MyPosts from './MyPosts';
 
@@ -44,7 +44,7 @@ const mapDispatchToProps = (dispatch) => {
     //   dispatch(action);
     // },упразднен с использованием форм редакса
     addPost: (newPostText) => {
-      dispatch(addPostActionCreator(newPostText));
+      dispatch(actions.addPostActionCreator(newPostText));
     }
   }
 }

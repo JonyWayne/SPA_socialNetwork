@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { sendMessageCreator, updateNewMessageBodyCreator } from '../../redux/dialogs-reducer';
+import { actions, updateNewMessageBodyCreator } from '../../redux/dialogs-reducer';
 import { withAuthRedirect } from '../hok/withAuthRedirect';
 import Dialogs from './Dialogs';
 
@@ -66,7 +66,7 @@ return {
 let mapDispatchToProps=(dispatch)=> {                                  //Фун-ция Connect из React-Redux библиотеки забирает колбэки-функции и передает сначала в КОНТЕЙНЕРНУЮ компоненту потом в презентационную компоненту
   return {
     sendMessage: (newMessageBody)=> {
-      dispatch(sendMessageCreator(newMessageBody));
+      dispatch(actions.sendMessageCreator(newMessageBody));
     }   
     // updateNewMessageBody:(body)=> {
     //   dispatch(updateNewMessageBodyCreator(body));   //не будем апдэйдить на каждый клик, используем форму редакса 

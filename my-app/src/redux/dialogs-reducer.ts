@@ -1,3 +1,4 @@
+import { InferActionsTypes } from "./redux-store";
 
 // const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
@@ -27,9 +28,10 @@ let initialState = {
     ]as Array <MessageType>, //Воспринимай как массив Сообщений
     // newMessageBody: " "
 };
-export type InitialStateType= typeof initialState
 
-const dialogsReducer = (state = initialState, action:any):InitialStateType => {
+
+
+const dialogsReducer = (state = initialState, action:ActionsType):InitialStateType => {
     switch (action.type) {
         // case UPDATE_NEW_MESSAGE_BODY:
         //     return {
@@ -55,11 +57,16 @@ const dialogsReducer = (state = initialState, action:any):InitialStateType => {
             return state;
     }
 }
-
-export type SendMessageCreatorActionType= {
- type:typeof SEND_MESSAGE
- newMessageBody:string
+export const actions={
+    sendMessageCreator: (newMessageBody:string) => ({ type: SEND_MESSAGE, newMessageBody } as const)//  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
 }
-export const sendMessageCreator = (newMessageBody:string) => ({ type: SEND_MESSAGE, newMessageBody })                //  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
+// export type SendMessageCreatorActionType= {
+//  type:typeof SEND_MESSAGE
+//  newMessageBody:string
+// }
+
 // export const updateNewMessageBodyCreator = (body) => ({ type: UPDATE_NEW_MESSAGE_BODY, body: body }) // Обновление стэйта с каждым нажатием кнопки. С использованием форм редакса стало не нужно
 export default dialogsReducer;
+
+export type InitialStateType= typeof initialState
+type ActionsType=InferActionsTypes<typeof actions>

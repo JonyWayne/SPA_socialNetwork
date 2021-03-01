@@ -1,4 +1,4 @@
-import { AppStateType, InferActionsTypes } from './redux-store';
+import { AppStateType, BaseThunkType, InferActionsTypes } from './redux-store';
 import { UserType } from './../Types/types';
 import { updateObjectInArray } from "../components/utilites/object-helpers";
 import { PhotosType } from "../Types/types";
@@ -126,7 +126,8 @@ export const usersReducer = (state = initialState, action: ActionsType): Initial
 
 type GetStateType = () => AppStateType
 type DispatchType = Dispatch<ActionsType>
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
+// type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
+type ThunkType = BaseThunkType< ActionsType>
 
 export const requestUsers = (page: number,
     pageSize: number): ThunkType => {  //Типизация Санки имеет 4 параметра- то что возвращает санка- промисы,типы стэйта, экстра аргументы-unkown и типы экшенов. ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
