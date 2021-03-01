@@ -16,15 +16,21 @@ import { compose } from 'redux';
 import {initializeApp} from './redux/app-reducer';
 import Preloader from './components/Common/Preloader/Preloader';
 import { withSuspence } from './components/hok/withSuspence';
+import { AppStateType } from './redux/redux-store';
+
+type MapPropsType=ReturnType <typeof mapStateToProps> 
+type DispatchPropsType={initializeApp: ()=>void}
+
+
 
 // import DialogsContainer from './components/Dialogs/DialogsContainer';
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer')); // Импорт компоненты с помощью lazy компонент
-
+const SuspendedDialogs=withSuspence(DialogsContainer);
 // import ProfileContainer from './components/Profile/ProfileContainer';
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer')); // Импорт компоненты с помощью lazy компонент
 
-class App extends Component {
-  catchAllUnhandleError=(promiseRejectionEvent)=>{
+class App extends Component <MapPropsType & DispatchPropsType> {
+  catchAllUnhandleError=(e:PromiseRejectionEvent)=>{
   //  alert('Some error occured');
   }
   componentDidMount () {
@@ -49,7 +55,7 @@ class App extends Component {
           <Route exact path='/' render={()=><Redirect to={"/profile"}/>}/>
           <Route exact path='/SPA_socialNetwork' render={()=><Redirect to={"/profile"}/>}/>        
           <Route path='/dialogs' 
-          render={withSuspence(DialogsContainer)}/>
+          render={()=> <SuspendedDialogs/>}/>
           
           <Route path='/profile/:userID?'render={()=> {
                 return <Suspense fallback={<div>Loading...</div>}> 
@@ -75,10 +81,10 @@ class App extends Component {
          );
   }
 }
-const mapStateToProps=(state)=> ({
+const mapStateToProps=(state:AppStateType)=> ({
   initialized:state.app.initialized //Обращение к BLL проинициализированы мы или нет, добавили в список редьюсеров используемый, закомбайнили редьюсер app
 })
 
-export default compose (
+export default compose<React.ComponentType> (
   withRouter,
   connect (mapStateToProps, {initializeApp})) (App);

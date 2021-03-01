@@ -16,7 +16,7 @@ return {
 export default compose (
   connect(mapStateToProps, {...actions}),
   withAuthRedirect
-)(Dialogs);
+)(Dialogs) as React.ComponentType;
 
 
 // DialogsContainer;
