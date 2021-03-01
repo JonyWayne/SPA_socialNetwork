@@ -58,7 +58,7 @@ const dialogsReducer = (state = initialState, action:ActionsType):InitialStateTy
     }
 }
 export const actions={
-    sendMessageCreator: (newMessageBody:string) => ({ type: SEND_MESSAGE, newMessageBody } as const)//  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
+    sendMessage: (newMessageBody:string) => ({ type: SEND_MESSAGE, newMessageBody } as const)//  Для UI создаем ActionCreator-ы, реализуем отправку сообщения, создание сообщения
 }
 // export type SendMessageCreatorActionType= {
 //  type:typeof SEND_MESSAGE
