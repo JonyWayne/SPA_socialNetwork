@@ -1,26 +1,35 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import Preloader from '../../Common/Preloader/Preloader';
 import s from './ProfileInfo.module.css'
 import ProfileStatus from './ProfileStatus';
 import ProfileStatusWithHooks from './ProfileStatusWithHooks.';
 import userPhoto from '../../../assets/images/User12.png';
 import ProfileDataForm from './ProfileDataForm';
+import { ProfileType,ContactsType } from '../../../Types/types';
 
+type PropsType={
+  profile:ProfileType
+  status:string
+  IsOwner:boolean
+  updateStatus:(status:string)=>void
+  savePhoto: (file: File) => void
+  saveProfile:(profile:ProfileType)=>Promise<any>
+}
 
-const ProfileInfo = ({ profile, status, IsOwner, updateStatus, savePhoto,saveProfile }) => {
+const ProfileInfo:React.FC<PropsType> = ({ profile, status, IsOwner, updateStatus, savePhoto,saveProfile }) => {
   let [editMode,setEditMode]=useState(false); //Деструктуризация массива (локальный стэйт,изменятся ли статус?)
   
   
   if (!profile) {
     return <Preloader />
   }
-  const onMainPhotoSelected = (e) => {
-    if (e.target.files.length) { // 1 Передаем параметр события e, забираем из инпута файл картинку открытую
+  const onMainPhotoSelected = (e:ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) { // 1 Передаем параметр события e, забираем из инпута файл картинку открытую
       savePhoto(e.target.files[0])                      //Вызываю колбэк и передаю во внешний мир то,что мы вызвали
       // props.savePhoto(e.target.files[0] -props убрали тк провели деструктуризацию
     }
   }
-const onSubmit=async(formData)=> { //Промис, сохранить результат и переключение с кнопки Save на Edit происходит, когда дождались результата успешного (промис сработал)
+const onSubmit=async(formData:ProfileType)=> { //Промис, сохранить результат и переключение с кнопки Save на Edit происходит, когда дождались результата успешного (промис сработал)
   saveProfile(formData).then(()=>{ //ВЫЗЫВАЕМ КОЛЛБЭК,КОТОРЫЙ ДИСПАТЧИТ-В saveProfile из ProfileDataForm придут стэйты и объект с данными о профиле для передачи из UI в BLL
     setEditMode(false); //Вышли из режима редактирования по нажатию кнопки Save в форме
   })
@@ -46,12 +55,18 @@ const onSubmit=async(formData)=> { //Промис, сохранить резул
   )
 
 }
-const ProfileData=({profile,IsOwner,gotoEditMode}) => {
+type ProfileDataPropsType={
+  profile:ProfileType
+  IsOwner:boolean
+  gotoEditMode:()=>void
+}
+
+const ProfileData:React.FC<ProfileDataPropsType>=({profile,IsOwner,gotoEditMode}) => {
   return  <div>
    {IsOwner && <div><button onClick={gotoEditMode}>edit</button></div>} 
    {/* В режиме редактирования кнопка редактирования поялвяется,если мы залогинены мы авторизованы */}
   <div>
-    <b> Full name </b>{profile.fullName}
+    <b> Full name </b>: {profile.fullName}
   </div>
   <div>
     <b> Looking for a job </b>{profile.lookingForAJob ? "Yes" : "No"}
@@ -66,15 +81,19 @@ const ProfileData=({profile,IsOwner,gotoEditMode}) => {
   </div>
   <div>
     <b> Contacts </b>:{Object.keys(profile.contacts).map(key => { //Пробегаем по массиву map и на базе каждого элемента рисуем компоненту Contact
-      return <Contact key={key} contactTitle={key} contactValue={profile.contacts[key]} />
+      return <Contact key={key} contactTitle={key} contactValue={profile.contacts[key as keyof ContactsType]} />
     }
     )}
   </div>
   </div>
 }
+type ContactsPropsType={
+  contactTitle:string
+  contactValue:string
+}
 
 
-const Contact = ({ contactTitle, contactValue }) => {
+const Contact:React.FC<ContactsPropsType> = ({ contactTitle, contactValue }) => {
   return <div className={s.contact}><b>{contactTitle}</b>:{contactValue}</div>
 }
 export default ProfileInfo;
