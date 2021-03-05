@@ -26,6 +26,6 @@ export type GetItemsType={
 }
 export type APIResponseType<D={},RC=ResultCodesEnum>={  //Создаем Generic-тип для уточнения типов
   data:D
-  messages: string
+  messages: Array<string>
   resultCode:RC
   }

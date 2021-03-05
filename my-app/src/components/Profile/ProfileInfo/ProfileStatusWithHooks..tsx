@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import s from './ProfileInfo.module.css'
 
+type PropsType={
+  status:string
+  updateStatus:(status: string) => void
+}
 
-const ProfileStatusWithHooks = (props) => {
+const ProfileStatusWithHooks:React.FC<PropsType> = (props) => {
   // let stateWithSetState=useState(false);
   // let editMode=stateWithSetState[0];
   // let setEditMode= stateWithSetState[1];
@@ -21,7 +25,7 @@ const ProfileStatusWithHooks = (props) => {
     setEditMode(false);
     props.updateStatus(status);//должны отправлять наверх родителю в стэйт инфу о статусе
   }
-  const onStatusChange=(e) => {
+  const onStatusChange=(e:ChangeEvent<HTMLInputElement>) => {
     setStatus(e.currentTarget.value); 
       }
 

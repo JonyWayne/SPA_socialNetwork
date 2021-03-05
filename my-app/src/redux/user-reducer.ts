@@ -39,9 +39,9 @@ let initialState = {
     isFetching: true,
     followingInProgress: [] as Array<number> //Массив пользователей ID-ишки
 };
-export type InitialStateType = typeof initialState
+export type InitialState = typeof initialState
 
-export const usersReducer = (state = initialState, action: ActionsType): InitialStateType => {
+export const usersReducer = (state = initialState, action: ActionsType): InitialState => {
     switch (action.type) {
         case FOLLOW:
             return {
@@ -146,7 +146,9 @@ export const requestUsers = (page: number,
     }
 
 }
-const _followUnfollowFlow = async (dispatch: DispatchType, userId: number, apiMethod: any, actionCreator: (userId:number)=>ActionsType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
+const _followUnfollowFlow = async (dispatch: DispatchType, 
+    userId: number, apiMethod: any, 
+    actionCreator: (userId:number)=>ActionsType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
     dispatch(actions.toggleFollowingProgress(true, userId));
     let data = await apiMethod(userId);
     if (data.resultCode === 0) {
@@ -157,14 +159,14 @@ const _followUnfollowFlow = async (dispatch: DispatchType, userId: number, apiMe
 //Создаем вторую санку, для follow
 export const follow = (userId: number): ThunkType => {
     return async (dispatch: any) => {
-        _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
+      await  _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
     }
 
 }
 
 export const unfollow = (userId: number): ThunkType => {
     return async (dispatch) => {
-        _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), actions.unfollowSuccess);
+        await _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), actions.unfollowSuccess);
     }
 }
 

@@ -10,28 +10,14 @@ import AddPostForm from '../../Common/FormControl/AddPostForm';
 type AddPostFormValuesType={
   newPostText:string
 }
-type PropsType={
+export type MapPropsType={
   posts:Array<PostType>
+ }
+export type DispatchPropsType={
   addPost:(newPostText:string)=>void
 }
-
-// const maxLength10 = maxLengthCreator(10);
-// // let AddNewPostForm:React.FC<PropsType>  = (props) => {
-// //   return <form onSubmit={props.handleSubmit}>
-// //     <Field name="newPostText" component={TextArea}
-// //       validate={[required, maxLength10]} />
-// //     {/* <textarea onChange={onPostChange} ref={newPostElement} value={props.newPostText} /> */}
-// //     {/* <div><button onClick={onAddPost}>Добавить пост</button> */}
-// //     <div><button>Добавить пост</button>
-// //     </div>
-// //   </form>
-// // }
-// let AddNewPostFormRedux = reduxForm({ form: "profileAddNewPostForm" })(AddNewPostForm);//старая форма)
-
-
-const MyPosts:React.FC<PropsType>= (props)=> {
-  let newPostElement = React.createRef();  /* Создали пустую ссылку, в дальнейшем на нее будет ссылаться реакт при создании и написании поста.Далее привяжем ссылку к текст Area */
-  let onAddPost = (values:AddPostFormValuesType) => {
+const MyPosts:React.FC<MapPropsType & DispatchPropsType>= (props)=> {
+    let onAddPost = (values:AddPostFormValuesType) => {
     props.addPost(values.newPostText);
     // props.dispatch(addPostActionCreator());
   }

@@ -14,7 +14,7 @@ type DispatchPropsType= {
   getStatus:(userID:number)=>void
   updateStatus:(status:string)=>void
   savePhoto:(file:File)=>void
-  saveProfile:(profile:ProfileType)=>void
+  saveProfile:(profile:ProfileType)=>Promise<any>
 }
 
 type PathParamType={

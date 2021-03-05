@@ -2,11 +2,21 @@ import React from 'react';
 import s from './Profile.module.css';
 import MyPosts from './MyPosts/MyPosts';
 import ProfileInfo from './ProfileInfo/ProfileInfo';
-import MyPostsContainer from './MyPosts/MyPostsContainer.jsx';
 import GORA from '../..//assets/images/GORA.png';
 import { saveProfile } from '../../redux/profile-reducer';
+import { ProfileType } from '../../Types/types';
+import MyPostsContainer from './MyPosts/MyPostsContainer';
 
-const Profile = (props) => {
+type PropsType={
+  profile:ProfileType | null
+  status:string
+  IsOwner:boolean
+  updateStatus:(status:string)=>void
+  savePhoto: (file: File) => void
+  saveProfile:(profile:ProfileType)=>Promise<any>
+}
+
+const Profile:React.FC<PropsType>= (props) => {
 
     return (
     <div>

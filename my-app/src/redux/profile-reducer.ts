@@ -23,7 +23,7 @@ let initialState = {
     // newPostText: ' ', //Упразднено, редакс формы
     profile: null as ProfileType | null,
     status: ' ',
-    newPostText:''
+    // newPostText:''
 };
 
 export type InitialStateType=typeof initialState
@@ -40,7 +40,7 @@ export const profileReducer = (state = initialState, action:ActionsType):Initial
             return {
                 ...state,
                 posts: [...state.posts, newPost],
-                newPostText: ''
+                // newPostText: ''
             };
             // stateCopy.posts=[...state.posts];
             // stateCopy.posts.push(newPost);
