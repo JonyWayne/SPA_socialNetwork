@@ -4,8 +4,8 @@ import { profileAPI } from "./profile-api";
 
 
 export const usersAPI= {
-    getUsers (currentPage=1, pageSize=10){ //Группируем методы в созданном объекте userAPI
-        return instance.get<GetItemsType>(`users?page=${currentPage}&count=${pageSize}`)
+    getUsers (currentPage=1, pageSize=10, term:string='', friend:null | boolean=null){ //Группируем методы в созданном объекте userAPI
+        return instance.get<GetItemsType>(`users?page=${currentPage}&count=${pageSize}&term=${term}`+ (friend===null ? '': `&friend=${friend}`))
             .then (response=>{
              return  response.data;
            });  //Промисы, получаем в ответе только те данные от сервера,что нам нужны

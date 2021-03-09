@@ -1,3 +1,4 @@
+
 import { AppStateType, BaseThunkType, InferActionsTypes } from './redux-store';
 import { UserType } from './../Types/types';
 import { updateObjectInArray } from "../components/utilites/object-helpers";
@@ -13,22 +14,26 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
 const TOOGLE_IS_FETCHING = 'TOOGLE_IS_FETCHING';
 const TOOGLE_IS_FOLLOWING_PROGRESS = 'TOOGLE_IS_FOLLOWING_PROGRESS';
+const SET_FILTER = 'SET_FILTER';
+
 
 type ActionsType = InferActionsTypes<typeof actions>
-export const actions ={
-    followSuccess: (userId: number) => ({ type: FOLLOW, userId }as const),       // 1) Создаем компоненту JSX 2)Добавляем в APP.js ее (USERS) 3) Создаем REDUCERS для USERS 4) Добавляем ActionCreators-слушателей на кнопки и т.д
+export const actions = {
+    followSuccess: (userId: number) => ({ type: FOLLOW, userId } as const),       // 1) Создаем компоненту JSX 2)Добавляем в APP.js ее (USERS) 3) Создаем REDUCERS для USERS 4) Добавляем ActionCreators-слушателей на кнопки и т.д
 
-    unfollowSuccess: (userId: number) => ({ type: UNFOLLOW, userId }as const),   // 5) Создаем копию STATE,чтоб не копировать целиком объект (это не правильно, имьютабельность нарушится)
-    
-    setUsers: (users: Array<UserType>) => ({ type: SET_USERS, users }as const),        // 7) Берем юзеров списком из сервака, установим их в State
-    
-    setCurrentPage: (page: number) => ({ type: SET_CURRENT_PAGE, currentPage: page }as const),
-    
-    setTotalUsersCount: (totalUsersCount: number) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount }as const),
-    
-    toggleIsFetching: (isFetching: boolean) => ({ type: TOOGLE_IS_FETCHING, isFetching }as const),
-    
-    toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: TOOGLE_IS_FOLLOWING_PROGRESS, isFetching, userId }as const)
+    unfollowSuccess: (userId: number) => ({ type: UNFOLLOW, userId } as const),   // 5) Создаем копию STATE,чтоб не копировать целиком объект (это не правильно, имьютабельность нарушится)
+
+    setUsers: (users: Array<UserType>) => ({ type: SET_USERS, users } as const),        // 7) Берем юзеров списком из сервака, установим их в State
+
+    setCurrentPage: (page: number) => ({ type: SET_CURRENT_PAGE, currentPage: page } as const),
+
+    setTotalUsersCount: (totalUsersCount: number) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount } as const),
+
+    toggleIsFetching: (isFetching: boolean) => ({ type: TOOGLE_IS_FETCHING, isFetching } as const),
+
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: TOOGLE_IS_FOLLOWING_PROGRESS, isFetching, userId } as const),
+
+    setFilter: (filter:FilterType) => ({ type: SET_FILTER, payload:filter} as const)
 }
 
 let initialState = {
@@ -37,9 +42,14 @@ let initialState = {
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: true,
-    followingInProgress: [] as Array<number> //Массив пользователей ID-ишки
+    followingInProgress: [] as Array<number>, //Массив пользователей ID-ишки
+    filter:{
+        term:" ",
+        friend: null as null | boolean
+    }
 };
 export type InitialState = typeof initialState
+export type FilterType = typeof initialState.filter
 
 export const usersReducer = (state = initialState, action: ActionsType): InitialState => {
     switch (action.type) {
@@ -100,7 +110,13 @@ export const usersReducer = (state = initialState, action: ActionsType): Initial
 
                 //Фильтруем массив пропускаем только ту ID которая не равна той ID которая пришла в action    
                 // Если у нас isFetching=true то в массив добавляем новую ID-шку                   
-            }      // Если у нас isFetching=false то создвем новый массив   
+            }      // Если у нас isFetching=false то создвем новый массив  
+
+
+        }
+        case SET_FILTER: {
+            return { ...state, filter: action.payload }  
+
         }
 
         default:
@@ -127,15 +143,16 @@ export const usersReducer = (state = initialState, action: ActionsType): Initial
 type GetStateType = () => AppStateType
 type DispatchType = Dispatch<ActionsType>
 // type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
-type ThunkType = BaseThunkType< ActionsType>
+type ThunkType = BaseThunkType<ActionsType>
 
 export const requestUsers = (page: number,
-    pageSize: number): ThunkType => {  //Типизация Санки имеет 4 параметра- то что возвращает санка- промисы,типы стэйта, экстра аргументы-unkown и типы экшенов. ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
+    pageSize: number, filter: FilterType): ThunkType => {  //Типизация Санки имеет 4 параметра- то что возвращает санка- промисы,типы стэйта, экстра аргументы-unkown и типы экшенов. ThunkAction<Promise<void>, AppStateType, unknown, ActionsType>
     return async (dispatch: DispatchType, getState: GetStateType) => {
         dispatch(actions.toggleIsFetching(true));  //Я бизнес уровень,я активирую крутилку (загрузка, ожидание)
         dispatch(actions.setCurrentPage(page)); //Диспатчим текущую страницу
+        dispatch(actions.setFilter(filter)); //term передаем строку поиска друзей (пользователей) формик
 
-        let data = await usersAPI.getUsers(page, pageSize);
+        let data = await usersAPI.getUsers(page, pageSize, filter.term, filter.friend);
         // .then(data => {
 
         dispatch(actions.toggleIsFetching(false));  //Я бизнес уровень,ответ с сервера пришел, крутилку выключаем
@@ -146,9 +163,9 @@ export const requestUsers = (page: number,
     }
 
 }
-const _followUnfollowFlow = async (dispatch: DispatchType, 
-    userId: number, apiMethod: any, 
-    actionCreator: (userId:number)=>ActionsType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
+const _followUnfollowFlow = async (dispatch: DispatchType,
+    userId: number, apiMethod: any,
+    actionCreator: (userId: number) => ActionsType) => { //Рефакторинг.Общий метод.Универсальная функция для follow unfollow
     dispatch(actions.toggleFollowingProgress(true, userId));
     let data = await apiMethod(userId);
     if (data.resultCode === 0) {
@@ -159,7 +176,7 @@ const _followUnfollowFlow = async (dispatch: DispatchType,
 //Создаем вторую санку, для follow
 export const follow = (userId: number): ThunkType => {
     return async (dispatch: any) => {
-      await  _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
+        await _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
     }
 
 }

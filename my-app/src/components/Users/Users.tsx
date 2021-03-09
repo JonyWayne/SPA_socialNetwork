@@ -1,13 +1,16 @@
 import React from 'react';
+import { FilterType } from '../../redux/user-reducer';
 import { UserType } from '../../Types/types';
 import Paginator from '../Common/Paginator/Paginator';
 import User from './User';
+import { UsersSearchForm } from './UsersSearchForm';
 
 type PropsType={
     totalUsersCount:number
     pageSize:number
     currentPage:number
     onPageChanged:(pageNumber:number)=>void
+    onFilterChanged:(filter:FilterType)=>void
     portionSize?:number //Либо число number 10 либо undefined, на верх по иерархии не передаем это число
     users:Array<UserType>
     followingInProgress:Array<number>
@@ -24,6 +27,7 @@ let Users:React.FC<PropsType> = ({currentPage,onPageChanged,totalUsersCount,page
 
     // }
     return <div>
+        <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
         {/* <div>
             {pages.map(p => {
                 return <span className={props.currentPage === p && styles.selectedPage}
@@ -45,5 +49,6 @@ let Users:React.FC<PropsType> = ({currentPage,onPageChanged,totalUsersCount,page
         </div>
         </div>
 }
+
 
 export default Users;

@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { follow, unfollow,  requestUsers } from '../../redux/user-reducer';
-import * as axios from 'axios';
+import { follow, unfollow,  requestUsers, FilterType } from '../../redux/user-reducer';
 import Users from './Users';
 import Preloader from '../Common/Preloader/Preloader';
-import { withAuthRedirect } from '../hok/withAuthRedirect';
 import { compose } from 'redux';
-import {getPageSize,getTotalUsersCount,getCurrentPage,getIsFetching,getFollowingInProgress, getUsers} from '../../redux/users-selectors';
+import {getPageSize,getTotalUsersCount,getCurrentPage,getIsFetching,getFollowingInProgress, getUsers, getUsersFilter} from '../../redux/users-selectors';
 import { UserType } from '../../Types/types';
 import { AppStateType } from '../../redux/redux-store';
 
@@ -18,9 +16,10 @@ type MapStatePropsType={
   totalUsersCount:number
   users:Array<UserType>
   followingInProgress:Array<number>
+  filter: FilterType
 }
 type MapDispatchPropsType={
-  getUsers:(currentPage:number, pageSize:number)=>void
+  getUsers:(currentPage:number, pageSize:number, filter:FilterType)=>void
   unfollow:(userId:number)=>void //Функция принимает,но ничего не возвращает
   follow:(userId:number)=>void
   // setCurrentPage:()=>void
@@ -34,16 +33,21 @@ type PropsType=MapStatePropsType & MapDispatchPropsType & OwnPropsType
 class UsersContainer extends React.Component<PropsType> {           //extends React.Component-благодаря этой записи Реакт за кадром напишет new User и создаст нового пользователя.При этом constructor(props), super(props) можно не писать, делегирование и прокдывание пропсов произойдет за кадром в реакт
 
     componentDidMount() {
-                 this.props.getUsers(this.props.currentPage, this.props.pageSize);
+                 const {currentPage,pageSize,filter}=this.props
+                 this.props.getUsers(currentPage, pageSize,filter);
             }
 
   onPageChanged=(pageNumber:number) => {
-    this.props.getUsers(pageNumber, this.props.pageSize);
+    const {pageSize,filter}=this.props
+    this.props.getUsers(pageNumber, pageSize,filter);
       }
-    render() {
-       
+  onFilterChanged=(filter:FilterType)=>{
+        const {pageSize}=this.props
+        this.props.getUsers(1, pageSize,filter);
+      }
 
-        return <>
+    render() {
+               return <>
         <h2>{this.props.pageTitle}</h2>
         {this.props.isFetching ? 
         <Preloader/>: null}
@@ -51,6 +55,7 @@ class UsersContainer extends React.Component<PropsType> {           //extends Re
         pageSize={this.props.pageSize}
         currentPage={this.props.currentPage}
         onPageChanged={this.onPageChanged}
+        onFilterChanged={this.onFilterChanged}
         users={this.props.users}
         follow={this.props.follow}
         unfollow={this.props.unfollow}
@@ -63,19 +68,6 @@ class UsersContainer extends React.Component<PropsType> {           //extends Re
 
 }
 
-
-
-
-//Используем для создания селектора
-// let mapStateToProps = (state) =>{                // mapStateToProps-функция- принимает весь глобальный стэйт целиком и возвращает объект с данными который нам нужен в данной, контейнерной компоненте
-// return {
-//     users:state.usersPage.users,                // Компонента получает USERS, то есть в презентационной (чистой) компоненте будет users   
-//     pageSize:state.usersPage.pageSize,
-//     totalUsersCount:state.usersPage.totalUsersCount,  
-//     currentPage:state.usersPage.currentPage,
-//     isFetching:state.usersPage.isFetching,
-//     followingInProgress:state.usersPage.followingInProgress  
-// }
 let mapStateToProps = (state:AppStateType):MapStatePropsType =>{                // mapStateToProps-функция- принимает весь глобальный стэйт целиком и возвращает объект с данными который нам нужен в данной, контейнерной компоненте
   return {
       users:getUsers(state),
@@ -84,40 +76,11 @@ let mapStateToProps = (state:AppStateType):MapStatePropsType =>{                
       totalUsersCount:getTotalUsersCount(state), 
       currentPage:getCurrentPage(state),
       isFetching:getIsFetching(state),
-      followingInProgress:getFollowingInProgress(state)
+      followingInProgress:getFollowingInProgress(state),
+      filter: getUsersFilter(state)
   }
 
-
 }
-// let mapDispatchToProps =(dispatch)=> {                 // Компонента получает callback-и которые может вызвать
-//     return {
-//         follow: (userId) => {
-//             dispatch(followAC(userId));            // Диспатчим, передаем результат работы ActionCratora-
-//         },
-//         unfollow: (userId) => {
-//             dispatch(unfollowAC(userId));            // Диспатчим, передаем результат работы ActionCratora-
-//         },
-//         setUsers: (users) => {
-//             dispatch(setUsersAC(users));
-//         },
-//         setCurrentPage: (pageNumber)=> {
-//             dispatch(setCurrentPageAC(pageNumber));
-//         },
-//         setTotalUsersCount: (totalCount)=> {
-//             dispatch(setTotalUsersCountAC(totalCount));
-//         },
-//         toggleIsFetching: (isFetching)=> {
-//             dispatch(toggleIsFetchingAC(isFetching));
-//         }
-        
-//     }
-
-// }
-
-// let withRedirect=withAuthRedirect(UsersContainer)
-// export default connect (mapStateToProps, 
-// {follow, unfollow,setCurrentPage,toggleFollowingProgress, getUsers}) (withRedirect);      // Путь до функциональной (или классовой) компоненты к которой хотим достучаться. App.js->UserContainer->UsersC
-
 export default compose(
   // withAuthRedirect,
   connect<MapStatePropsType,MapDispatchPropsType,OwnPropsType,AppStateType> 
