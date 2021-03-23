@@ -8,9 +8,9 @@ import Security from './components/Security/Security';
 import News from './components/News/News';
 import Settings from './components/Settings/Settings';
 import About_us from './components/About_us/About_us';
-import UsersContainer from './components/Users/UsersContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
-import Login from './components/Login/Login';
+import {UsersPage} from './components/Users/UsersContainer';
+import {Login} from './components/Login/Login';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {initializeApp} from './redux/app-reducer';
@@ -65,7 +65,7 @@ class App extends Component <MapPropsType & DispatchPropsType> {
           }}/>     
           {/* :UserId-Добавляем путь к пользователю в ссылку. ?-означает,что параметр может отсутствовать */}
           <Route path='/login'render={()=><Login  />}/>    
-          <Route path='/users'render={()=><UsersContainer pageTitle={'Страница пользователей'}/>}/>
+          <Route path='/users'render={()=><UsersPage pageTitle={'Страница пользователей'}/>}/>
           <Route path='/music' component={Music}/>
           <Route path='/video' component={Video}/>
           <Route path='/news' component={News}/>
