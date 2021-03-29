@@ -1,20 +1,26 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
+import { useSelector } from "react-redux";
 import { FilterType } from "../../redux/user-reducer";
+import { getUsersFilter } from "../../redux/users-selectors";
 
 const usersSearchFormValidate = (values: any) => {
     const errors = {};
     return errors;
 }
+type FriendFormType="true" | 'false' | "null"
 type FormType={
     term: string
-    friend: "true" | 'false' | "null"
+    friend: FriendFormType
 }
 type PropsType = {
     onFilterChanged: (filter: FilterType) => void
 }
 export const UsersSearchForm: React.FC<PropsType> = React.memo((props) => {
+    const filter = useSelector(getUsersFilter)
     const submit = (values: FormType, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+        
+        
         const filter:FilterType={
             term:values.term,
             friend:values.friend === "null" ? null : values.friend === "true" ? true : false
@@ -22,9 +28,12 @@ export const UsersSearchForm: React.FC<PropsType> = React.memo((props) => {
         props.onFilterChanged(filter);
         setSubmitting(false)
     };
+    // debugger;
     return <div>
         <Formik
-            initialValues={{ term: '', friend: 'null'}}
+            enableReinitialize //Включили перерисовку для формы поиска пользователей, при первой рендеренги приходят налл в строки поиска фильтра, инишиалстэйт нарисовал ничего а потом он уже не запускается. Для этого включаем реинишиалайзд
+            
+            initialValues={{ term:filter.term, friend:String(filter.friend) as FriendFormType}}
             validate={usersSearchFormValidate}
             onSubmit={submit}
         >

@@ -58,29 +58,14 @@ export const usersReducer = (state = initialState, action: ActionsType): Initial
                 ...state,
                 users: updateObjectInArray(state.users, action.userId, "id", { followed: true })
 
-                //users:[...state.users],
-                // users: state.users.map(u => {                 // 6) Чтоб скопировать массив глубинно и значения массива изменялись, нужно добавить map();
-                //     if (u.id === action.userId) {
-                //         return { ...u, followed: true }
-                //     }
-                //     return u;
-
-                // })
-            }
+                           }
 
         case UNFOLLOW:
 
             return {
                 ...state,
                 users: updateObjectInArray(state.users, action.userId, "id", { followed: false })
-                // users:[...state.users],
-                // users: state.users.map(u => {                 // 6) Чтоб скопировать массив глубинно и значения массива изменялись, нужно добавить map();
-                //     if (u.id === action.userId) {
-                //         return { ...u, followed: false }
-                //     }
-                //     return u;
-
-                // })
+               
             }
 
         case SET_USERS: {
@@ -175,8 +160,10 @@ const _followUnfollowFlow = async (dispatch: DispatchType,
 }
 //Создаем вторую санку, для follow
 export const follow = (userId: number): ThunkType => {
+    
     return async (dispatch: any) => {
         await _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
+       
     }
 
 }
