@@ -21,7 +21,7 @@ const Profile:React.FC<PropsType>= (props) => {
     return (
     <div>
     <div>
-     <img className='' src={GORA}/>
+    <img className={s.preview_img} src={GORA}/>
       <ProfileInfo savePhoto={props.savePhoto} IsOwner={props.IsOwner} 
       profile={props.profile} status={props.status} 
       updateStatus={props.updateStatus}
