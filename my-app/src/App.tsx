@@ -23,6 +23,7 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import { Header } from './components/Header/Header';
 
+
 type MapPropsType=ReturnType <typeof mapStateToProps> 
 type DispatchPropsType={initializeApp: ()=>void}
 
@@ -34,8 +35,11 @@ const {Content, Footer, Sider } = Layout;
 // import DialogsContainer from './components/Dialogs/DialogsContainer';
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer')); // Импорт компоненты с помощью lazy компонент
 const SuspendedDialogs=withSuspence(DialogsContainer);
+
 // import ProfileContainer from './components/Profile/ProfileContainer';
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer')); // Импорт компоненты с помощью lazy компонент
+const ChatPage = React.lazy(() => import('./pages/Chat/ChatPage'));
+const SuspendedChatPage=withSuspence(ChatPage)
 
 class App extends Component <MapPropsType & DispatchPropsType> {
   catchAllUnhandleError=(e:PromiseRejectionEvent)=>{
@@ -144,6 +148,8 @@ class App extends Component <MapPropsType & DispatchPropsType> {
           <Route path='/settings' component={Settings}/>
           <Route path='/security' component={Security}/>
           <Route path='/about_us' component={About_us}/>
+          <Route path='/chat'
+          render={()=> <SuspendedChatPage/>}/>
           <Route path='*' render={()=><div>404 Not Found Page,Sorry;) <Button>Ok</Button></div>}/>
           </Switch>
                   
